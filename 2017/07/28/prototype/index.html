@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    <title>原型规则 | 韩鑫 | IT技术分享</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="Javascript,原型,原型链">
+    <meta name="description" content="5条原型规则是学习原型链的基础  一、所有的引用类型（对象、数组、函数），都具有对象特性，即可自由扩展属性（除了“null”以外）var obj={}; obj.a=100;  //对象obj扩展了属性a var arr=[]; arr.a=100;  //数组arr扩展了属性a function fn() {}    fn.a=100;  //函数fn扩展了属性a 二、所有的引用类型（数组、对象">
+<meta name="keywords" content="Javascript,原型,原型链">
+<meta property="og:type" content="article">
+<meta property="og:title" content="原型规则">
+<meta property="og:url" content="http://bjszdkj.cn/2017/07/28/prototype/index.html">
+<meta property="og:site_name" content="韩鑫">
+<meta property="og:description" content="5条原型规则是学习原型链的基础  一、所有的引用类型（对象、数组、函数），都具有对象特性，即可自由扩展属性（除了“null”以外）var obj={}; obj.a=100;  //对象obj扩展了属性a var arr=[]; arr.a=100;  //数组arr扩展了属性a function fn() {}    fn.a=100;  //函数fn扩展了属性a 二、所有的引用类型（数组、对象">
+<meta property="og:updated_time" content="2017-07-28T11:59:18.222Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="原型规则">
+<meta name="twitter:description" content="5条原型规则是学习原型链的基础  一、所有的引用类型（对象、数组、函数），都具有对象特性，即可自由扩展属性（除了“null”以外）var obj={}; obj.a=100;  //对象obj扩展了属性a var arr=[]; arr.a=100;  //数组arr扩展了属性a function fn() {}    fn.a=100;  //函数fn扩展了属性a 二、所有的引用类型（数组、对象">
+    
+        <link rel="alternate" type="application/atom+xml" title="韩鑫" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!--高亮代码-->
+    <link rel="stylesheet" href="/styles/solarized_dark.css">
+    <script src="http://yandex.st/highlightjs/8.0/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    <!--文章访问量-->
+    <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+    </script>
+
+    <!--字体图标-->
+    <link rel="stylesheet" href="/styles/iconfont.css">
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">Hanxin</h5>
+          <a href="mailto:272623823@qq.com" title="272623823@qq.com" class="mail">272623823@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                文章
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/hanxin272623823" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">原型规则</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="Search">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">原型规则</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2017-07-28T11:59:18.216Z" itemprop="datePublished" class="page-time">
+  2017-07-28
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Web前端/">Web前端</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-6"><a class="post-toc-link" href="#一、所有的引用类型（对象、数组、函数），都具有对象特性，即可自由扩展属性（除了“null”以外）"><span class="post-toc-number">1.</span> <span class="post-toc-text">一、所有的引用类型（对象、数组、函数），都具有对象特性，即可自由扩展属性（除了“null”以外）</span></a></li><li class="post-toc-item post-toc-level-6"><a class="post-toc-link" href="#二、所有的引用类型（数组、对象、函数），都有一个proto（隐式原型）属性，属性值是一个普通的对象"><span class="post-toc-number">2.</span> <span class="post-toc-text">二、所有的引用类型（数组、对象、函数），都有一个proto（隐式原型）属性，属性值是一个普通的对象</span></a></li><li class="post-toc-item post-toc-level-6"><a class="post-toc-link" href="#三、所有的函数，都有一个prototype（显式原型）属性，属性值也是一个普通的对象"><span class="post-toc-number">3.</span> <span class="post-toc-text">三、所有的函数，都有一个prototype（显式原型）属性，属性值也是一个普通的对象</span></a></li><li class="post-toc-item post-toc-level-6"><a class="post-toc-link" href="#四、所有的引用类型（数组、对象、函数），proto属性值指向它的构造函数的”prototype”的属性值"><span class="post-toc-number">4.</span> <span class="post-toc-text">四、所有的引用类型（数组、对象、函数），proto属性值指向它的构造函数的”prototype”的属性值</span></a></li><li class="post-toc-item post-toc-level-6"><a class="post-toc-link" href="#五、当试图得到一个对象的某个属性时，如果这个对象本身没有这个属性，那么会去它的proto（即它的构造函数的prototype）中寻找"><span class="post-toc-number">5.</span> <span class="post-toc-text">五、当试图得到一个对象的某个属性时，如果这个对象本身没有这个属性，那么会去它的proto（即它的构造函数的prototype）中寻找</span></a></li></ol>
+        </nav>
+    </aside>
+    
+<article id="post-prototype"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">原型规则</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2017-07-28 19:59:18" datetime="2017-07-28T11:59:18.216Z"  itemprop="datePublished">2017-07-28</time>
+
+
+            <span class="icon-span"><i class="iconfont icon-view"></i><span id="busuanzi_value_page_pv"></span></span>
+            
+
+            
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <blockquote><p>5条原型规则是学习原型链的基础</p>
+</blockquote>
+<h6 id="一、所有的引用类型（对象、数组、函数），都具有对象特性，即可自由扩展属性（除了“null”以外）"><a href="#一、所有的引用类型（对象、数组、函数），都具有对象特性，即可自由扩展属性（除了“null”以外）" class="headerlink" title="一、所有的引用类型（对象、数组、函数），都具有对象特性，即可自由扩展属性（除了“null”以外）"></a>一、所有的引用类型（对象、数组、函数），都具有对象特性，即可自由扩展属性（除了“null”以外）</h6><pre><code>var obj={}; obj.a=100;  //对象obj扩展了属性a
+var arr=[]; arr.a=100;  //数组arr扩展了属性a
+function fn() {}    fn.a=100;  //函数fn扩展了属性a
+</code></pre><h6 id="二、所有的引用类型（数组、对象、函数），都有一个proto（隐式原型）属性，属性值是一个普通的对象"><a href="#二、所有的引用类型（数组、对象、函数），都有一个proto（隐式原型）属性，属性值是一个普通的对象" class="headerlink" title="二、所有的引用类型（数组、对象、函数），都有一个proto（隐式原型）属性，属性值是一个普通的对象"></a>二、所有的引用类型（数组、对象、函数），都有一个<strong>proto</strong>（隐式原型）属性，属性值是一个普通的对象</h6><pre><code>console.log(obj.__proto__);
+console.log(arr.__proto__);
+console.log(fn.__proto__);
+</code></pre><h6 id="三、所有的函数，都有一个prototype（显式原型）属性，属性值也是一个普通的对象"><a href="#三、所有的函数，都有一个prototype（显式原型）属性，属性值也是一个普通的对象" class="headerlink" title="三、所有的函数，都有一个prototype（显式原型）属性，属性值也是一个普通的对象"></a>三、所有的函数，都有一个prototype（显式原型）属性，属性值也是一个普通的对象</h6><pre><code>console.log(fn.prototype);
+</code></pre><h6 id="四、所有的引用类型（数组、对象、函数），proto属性值指向它的构造函数的”prototype”的属性值"><a href="#四、所有的引用类型（数组、对象、函数），proto属性值指向它的构造函数的”prototype”的属性值" class="headerlink" title="四、所有的引用类型（数组、对象、函数），proto属性值指向它的构造函数的”prototype”的属性值"></a>四、所有的引用类型（数组、对象、函数），<strong>proto</strong>属性值指向它的构造函数的”prototype”的属性值</h6><pre><code>console.log(obj.__proto__ === Object.prototype)
+</code></pre><h6 id="五、当试图得到一个对象的某个属性时，如果这个对象本身没有这个属性，那么会去它的proto（即它的构造函数的prototype）中寻找"><a href="#五、当试图得到一个对象的某个属性时，如果这个对象本身没有这个属性，那么会去它的proto（即它的构造函数的prototype）中寻找" class="headerlink" title="五、当试图得到一个对象的某个属性时，如果这个对象本身没有这个属性，那么会去它的proto（即它的构造函数的prototype）中寻找"></a>五、当试图得到一个对象的某个属性时，如果这个对象本身没有这个属性，那么会去它的<strong>proto</strong>（即它的构造函数的prototype）中寻找</h6><pre><code>// 构造函数
+function Foo(name,age){
+    this.name=name;
+}
+Foo.prototype.alertName=function(){
+    alert(this.name);
+}
+
+// 创建示例
+var f= new Foo(&#39;zhangsan&#39;);
+f.printName=function(){
+    console.log(this.name);
+}
+
+// 测试
+f.printName();
+f.alertName();
+</code></pre>
+        </div>
+
+        <blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    Last updated: <time datetime="2017-07-28T11:59:18.222Z" itemprop="dateUpdated">2017-07-28 19:59:18</time>
+</span><br>
+
+
+        
+    </div>
+    <footer>
+        <a href="http://bjszdkj.cn">
+            <img src="/img/avatar.jpg" alt="Hanxin">
+            Hanxin
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Javascript/">Javascript</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/原型/">原型</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/原型链/">原型链</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://bjszdkj.cn/2017/07/28/prototype/&title=《原型规则》 — 韩鑫&pic=http://bjszdkj.cn/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://bjszdkj.cn/2017/07/28/prototype/&title=《原型规则》 — 韩鑫&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://bjszdkj.cn/2017/07/28/prototype/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《原型规则》 — 韩鑫&url=http://bjszdkj.cn/2017/07/28/prototype/&via=http://bjszdkj.cn" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://bjszdkj.cn/2017/07/28/prototype/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2017/07/28/vue/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">5分钟入门vue.js</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <ul class="reward-items">
+        
+        <li>
+            <img src="/img/wechat.jpg" title="微信打赏二维码" alt="微信打赏二维码">
+            <p>微信</p>
+        </li>
+        
+
+        
+        <li>
+            <img src="/img/alipay.jpg" title="支付宝打赏二维码" alt="支付宝打赏二维码">
+            <p>支付宝</p>
+        </li>
+        
+    </ul>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+
+        <p>
+            总访问量 : <span id="busuanzi_value_site_pv"></span>
+        </p>
+
+    </div>
+    <div class="bottom">
+        <p>
+            <span>Power by</span>
+            <span>Hanxin &copy; 2015 - 2017</span>
+        </p>
+    </div>
+
+
+
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://bjszdkj.cn/2017/07/28/prototype/&title=《原型规则》 — 韩鑫&pic=http://bjszdkj.cn/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://bjszdkj.cn/2017/07/28/prototype/&title=《原型规则》 — 韩鑫&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://bjszdkj.cn/2017/07/28/prototype/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《原型规则》 — 韩鑫&url=http://bjszdkj.cn/2017/07/28/prototype/&via=http://bjszdkj.cn" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://bjszdkj.cn/2017/07/28/prototype/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAK4AAACuCAAAAACKZ2kyAAAByElEQVR42u3aQW7DMAwEwPz/0+61RWFnSVqKA4xOQdDK4xwIcanXK17Hr3X9zf/PyW43L1xc3DH3uFzJ35z9V/LCuQEXF3c/9+wB1cJ0jajuj4uL+y3c65I02RMXF/d7uZNylr8wLi7uE7hJ83Mdapx9kxSvJb0aLi7ugJunlOs+L8l3cXFxW9xeDNqLSntP/LMzLi7uFu68sYnalZsaKlxc3P3cpNwkuEkIEv00uLi4W7jJlanqALWK6P1YuLi4e7iT8OKuMLRa+HBxce/lVscV1aPJvGCdpji4uLiLudVpRTnIuCs6wcXF3cLNt+htmjdL+aUuXFzcPdzJ9amEnvRe+bUwXFzcndz5MDU/ACXFLpoJ4+LiLuPmzc+kDM1DWFxc3J3cXgiSHGWqLVO0Jy4u7oe4+Ra9digPUN70ari4uIu5vfZmPnppnsJwcXGXcY/iSoYf1di08GK4uLhbuNXiUg04rin5mLb8Mri4uGNuLyTNy1N1ZBvdE8HFxd3CzQtNfqwp92HJs3BxcR/PrQ5U8ssWb8IRXFzch3GrY9f5lYtRIcPFxR1w88tVd13YygMXXFzc/dzJ4DPPX3uHm1G+i4uL2+H+ACCZ7AtDtS50AAAAAElFTkSuQmCC" alt="微信分享二维码">
+</div>
+
+
+
+
+
+</script>
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
