@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://bjszdkj.cn/"/>
-  <updated>2017-07-28T11:59:18.222Z</updated>
+  <updated>2017-08-06T15:10:38.999Z</updated>
   <id>http://bjszdkj.cn/</id>
   
   <author>
@@ -16,70 +16,250 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>原型规则</title>
-    <link href="http://bjszdkj.cn/2017/07/28/prototype/"/>
-    <id>http://bjszdkj.cn/2017/07/28/prototype/</id>
-    <published>2017-07-28T11:59:18.216Z</published>
-    <updated>2017-07-28T11:59:18.222Z</updated>
+    <title>react设计思想</title>
+    <link href="http://bjszdkj.cn/2017/08/06/react%E8%AE%BE%E8%AE%A1%E6%80%9D%E6%83%B3/"/>
+    <id>http://bjszdkj.cn/2017/08/06/react设计思想/</id>
+    <published>2017-08-06T15:10:38.991Z</published>
+    <updated>2017-08-06T15:10:38.999Z</updated>
     
-    <content type="html"><![CDATA[<blockquote><p>5条原型规则是学习原型链的基础</p>
+    <content type="html"><![CDATA[<blockquote><p>译者序：本文是 React 核心开发者、有 React API 终结者之称的 Sebastian Markbage 撰写，阐述了他设计 React 的初衷。阅读此文，你能站在更高的高度思考 React 的过去、现在和未来。原文地址：<a href="https://github.com/reactjs/react-basic" target="_blank" rel="external">https://github.com/reactjs/react-basic</a></p>
 </blockquote>
-<h6 id="一、所有的引用类型（对象、数组、函数），都具有对象特性，即可自由扩展属性（除了“null”以外）"><a href="#一、所有的引用类型（对象、数组、函数），都具有对象特性，即可自由扩展属性（除了“null”以外）" class="headerlink" title="一、所有的引用类型（对象、数组、函数），都具有对象特性，即可自由扩展属性（除了“null”以外）"></a>一、所有的引用类型（对象、数组、函数），都具有对象特性，即可自由扩展属性（除了“null”以外）</h6><pre><code>var obj={}; obj.a=100;  //对象obj扩展了属性a
-var arr=[]; arr.a=100;  //数组arr扩展了属性a
-function fn() {}    fn.a=100;  //函数fn扩展了属性a
-</code></pre><h6 id="二、所有的引用类型（数组、对象、函数），都有一个proto（隐式原型）属性，属性值是一个普通的对象"><a href="#二、所有的引用类型（数组、对象、函数），都有一个proto（隐式原型）属性，属性值是一个普通的对象" class="headerlink" title="二、所有的引用类型（数组、对象、函数），都有一个proto（隐式原型）属性，属性值是一个普通的对象"></a>二、所有的引用类型（数组、对象、函数），都有一个<strong>proto</strong>（隐式原型）属性，属性值是一个普通的对象</h6><pre><code>console.log(obj.__proto__);
-console.log(arr.__proto__);
-console.log(fn.__proto__);
-</code></pre><h6 id="三、所有的函数，都有一个prototype（显式原型）属性，属性值也是一个普通的对象"><a href="#三、所有的函数，都有一个prototype（显式原型）属性，属性值也是一个普通的对象" class="headerlink" title="三、所有的函数，都有一个prototype（显式原型）属性，属性值也是一个普通的对象"></a>三、所有的函数，都有一个prototype（显式原型）属性，属性值也是一个普通的对象</h6><pre><code>console.log(fn.prototype);
-</code></pre><h6 id="四、所有的引用类型（数组、对象、函数），proto属性值指向它的构造函数的”prototype”的属性值"><a href="#四、所有的引用类型（数组、对象、函数），proto属性值指向它的构造函数的”prototype”的属性值" class="headerlink" title="四、所有的引用类型（数组、对象、函数），proto属性值指向它的构造函数的”prototype”的属性值"></a>四、所有的引用类型（数组、对象、函数），<strong>proto</strong>属性值指向它的构造函数的”prototype”的属性值</h6><pre><code>console.log(obj.__proto__ === Object.prototype)
-</code></pre><h6 id="五、当试图得到一个对象的某个属性时，如果这个对象本身没有这个属性，那么会去它的proto（即它的构造函数的prototype）中寻找"><a href="#五、当试图得到一个对象的某个属性时，如果这个对象本身没有这个属性，那么会去它的proto（即它的构造函数的prototype）中寻找" class="headerlink" title="五、当试图得到一个对象的某个属性时，如果这个对象本身没有这个属性，那么会去它的proto（即它的构造函数的prototype）中寻找"></a>五、当试图得到一个对象的某个属性时，如果这个对象本身没有这个属性，那么会去它的<strong>proto</strong>（即它的构造函数的prototype）中寻找</h6><pre><code>// 构造函数
-function Foo(name,age){
-    this.name=name;
+<p>我写此文是想正式地阐述我心中 React 的心智模型。目的是解释为什么我们会这样设计 React，同时你也可以根据这些论点反推出 React。</p>
+<p>不可否认，此文中的部分论据或前提尚存争议，而且部分示例的设计可能存在 bug 或疏忽。这只是正式确定它的最初阶段。如果你有更好的完善它的想法可以随时提交 pull request。本文不会介绍框架细节中的奇技淫巧，相信这样能提纲挈领，让你看清 React 由简单到复杂的设计过程。</p>
+<p>React.js 的真实实现中充满了具体问题的解决方案，渐进式的解法，算法优化，历史遗留代码，debug 工具以及其他一些可以让它真的具有高可用性的内容。这些代码可能并不稳定，因为未来浏览器的变化和功能权重的变化随时面临改变。所以具体的代码很难彻底解释清楚。</p>
+<p>我偏向于选择一种我能完全 hold 住的简洁的心智模型来作介绍。</p>
+<h3 id="变换（Transformation）"><a href="#变换（Transformation）" class="headerlink" title="变换（Transformation）"></a>变换（Transformation）</h3><p>设计 React 的核心前提是认为 UI 只是把数据通过映射关系变换成另一种形式的数据。同样的输入必会有同样的输出。这恰好就是纯函数。</p>
+<pre><code>function NameBox(name) {
+  return { fontWeight: &#39;bold&#39;, labelContent: name };
 }
-Foo.prototype.alertName=function(){
-    alert(this.name);
+&#39;Sebastian Markbage&#39; -&gt;
+{ fontWeight: &#39;bold&#39;, labelContent: &#39;Sebastian Markbage&#39; };
+</code></pre><h3 id="抽象（Abstraction）"><a href="#抽象（Abstraction）" class="headerlink" title="抽象（Abstraction）"></a>抽象（Abstraction）</h3><p>你不可能仅用一个函数就能实现复杂的 UI。重要的是，你需要把 UI 抽象成多个隐藏内部细节，又可复用的函数。通过在一个函数中调用另一个函数来实现复杂的 UI，这就是抽象。</p>
+<pre><code>function FancyUserBox(user) {
+  return {
+    borderStyle: &#39;1px solid blue&#39;,
+    childContent: [
+      &#39;Name: &#39;,
+      NameBox(user.firstName + &#39; &#39; + user.lastName)
+    ]
+  };
+}
+{ firstName: &#39;Sebastian&#39;, lastName: &#39;Markbåge&#39; } -&gt;
+{
+  borderStyle: &#39;1px solid blue&#39;,
+  childContent: [
+    &#39;Name: &#39;,
+    { fontWeight: &#39;bold&#39;, labelContent: &#39;Sebastian Markbåge&#39; }
+  ]
+};
+</code></pre><h3 id="组合（Composition）"><a href="#组合（Composition）" class="headerlink" title="组合（Composition）"></a>组合（Composition）</h3><p>为了真正达到重用的特性，只重用叶子然后每次都为他们创建一个新的容器是不够的。你还需要可以包含其他抽象的容器再次进行组合。我理解的“组合”就是将两个或者多个不同的抽象合并为一个。</p>
+<pre><code>function FancyBox(children) {
+  return {
+    borderStyle: &#39;1px solid blue&#39;,
+    children: children
+  };
 }
 
-// 创建示例
-var f= new Foo(&#39;zhangsan&#39;);
-f.printName=function(){
-    console.log(this.name);
+function UserBox(user) {
+  return FancyBox([
+    &#39;Name: &#39;,
+    NameBox(user.firstName + &#39; &#39; + user.lastName)
+  ]);
+}
+</code></pre><h3 id="状态（State）"><a href="#状态（State）" class="headerlink" title="状态（State）"></a>状态（State）</h3><p>UI 不单单是对服务器端或业务逻辑状态的复制。实际上还有很多状态是针对具体的渲染目标。举个例子，举个例子，在一个 text field 中打字。它不一定要复制到其他页面或者你的手机设备。滚动位置这个状态是一个典型的你几乎不会复制到多个渲染目标的。</p>
+<p>我们倾向于使用不可变的数据模型。我们把可以改变 state 的函数串联起来作为原点放置在顶层。</p>
+<pre><code>function FancyNameBox(user, likes, onClick) {
+  return FancyBox([
+    &#39;Name: &#39;, NameBox(user.firstName + &#39; &#39; + user.lastName),
+    &#39;Likes: &#39;, LikeBox(likes),
+    LikeButton(onClick)
+  ]);
 }
 
-// 测试
-f.printName();
-f.alertName();
+// 实现细节
+
+var likes = 0;
+function addOneMoreLike() {
+  likes++;
+  rerender();
+}
+
+// 初始化
+
+FancyNameBox(
+  { firstName: &#39;Sebastian&#39;, lastName: &#39;Markbåge&#39; },
+  likes,
+  addOneMoreLike
+);
+</code></pre><p>注意：本例更新状态时会带来副作用（addOneMoreLike 函数中）。我实际的想法是当一个“update”传入时我们返回下一个版本的状态，但那样会比较复杂。此示例待更新</p>
+<h3 id="Memoization"><a href="#Memoization" class="headerlink" title="Memoization"></a>Memoization</h3><p>对于纯函数，使用相同的参数一次次调用未免太浪费资源。我们可以创建一个函数的 memorized 版本，用来追踪最后一个参数和结果。这样如果我们继续使用同样的值，就不需要反复执行它了。</p>
+<pre><code>function memoize(fn) {
+  var cachedArg;
+  var cachedResult;
+  return function(arg) {
+    if (cachedArg === arg) {
+      return cachedResult;
+    }
+    cachedArg = arg;
+    cachedResult = fn(arg);
+    return cachedResult;
+  };
+}
+
+var MemoizedNameBox = memoize(NameBox);
+
+function NameAndAgeBox(user, currentTime) {
+  return FancyBox([
+    &#39;Name: &#39;,
+    MemoizedNameBox(user.firstName + &#39; &#39; + user.lastName),
+    &#39;Age in milliseconds: &#39;,
+    currentTime - user.dateOfBirth
+  ]);
+}
+</code></pre><h3 id="列表（Lists）"><a href="#列表（Lists）" class="headerlink" title="列表（Lists）"></a>列表（Lists）</h3><p>大部分 UI 都是展示列表数据中不同 item 的列表结构。这是一个天然的层级。</p>
+<p>为了管理列表中的每一个 item 的 state ，我们可以创造一个 Map 容纳具体 item 的 state。</p>
+<pre><code>function UserList(users, likesPerUser, updateUserLikes) {
+  return users.map(user =&gt; FancyNameBox(
+    user,
+    likesPerUser.get(user.id),
+    () =&gt; updateUserLikes(user.id, likesPerUser.get(user.id) + 1)
+  ));
+}
+
+var likesPerUser = new Map();
+function updateUserLikes(id, likeCount) {
+  likesPerUser.set(id, likeCount);
+  rerender();
+}
+
+UserList(data.users, likesPerUser, updateUserLikes);
+</code></pre><p>注意：现在我们向 FancyNameBox 传了多个不同的参数。这打破了我们的 memoization 因为我们每次只能存储一个值。更多相关内容在下面。</p>
+<h3 id="连续性（Continuations）"><a href="#连续性（Continuations）" class="headerlink" title="连续性（Continuations）"></a>连续性（Continuations）</h3><p>不幸的是，自从 UI 中有太多的列表，明确的管理就需要大量的重复性样板代码。</p>
+<p>我们可以通过推迟一些函数的执行，进而把一些模板移出业务逻辑。比如，使用“柯里化”（JavaScript 中的 bind）。然后我们可以从核心的函数外面传递 state，这样就没有样板代码了。</p>
+<p>下面这样并没有减少样板代码，但至少把它从关键业务逻辑中剥离。</p>
+<pre><code>function FancyUserList(users) {
+  return FancyBox(
+    UserList.bind(null, users)
+  );
+}
+
+const box = FancyUserList(data.users);
+const resolvedChildren = box.children(likesPerUser, updateUserLikes);
+const resolvedBox = {
+  ...box,
+  children: resolvedChildren
+};
+</code></pre><h3 id="State-Map"><a href="#State-Map" class="headerlink" title="State Map"></a>State Map</h3><p>之前我们知道可以使用组合避免重复执行相同的东西这样一种重复模式。我们可以把执行和传递 state 逻辑挪动到被复用很多的低层级的函数中去。</p>
+<pre><code>function FancyBoxWithState(
+  children,
+  stateMap,
+  updateState
+) {
+  return FancyBox(
+    children.map(child =&gt; child.continuation(
+      stateMap.get(child.key),
+      updateState
+    ))
+  );
+}
+
+function UserList(users) {
+  return users.map(user =&gt; {
+    continuation: FancyNameBox.bind(null, user),
+    key: user.id
+  });
+}
+
+function FancyUserList(users) {
+  return FancyBoxWithState.bind(null,
+    UserList(users)
+  );
+}
+
+const continuation = FancyUserList(data.users);
+continuation(likesPerUser, updateUserLikes);
+</code></pre><h3 id="Memoization-Map"><a href="#Memoization-Map" class="headerlink" title="Memoization Map"></a>Memoization Map</h3><p>一旦我们想在一个 memoization 列表中 memoize 多个 item 就会变得很困难。因为你需要制定复杂的缓存算法来平衡调用频率和内存占有率。</p>
+<p>还好 UI 在同一个位置会相对的稳定。相同的位置一般每次都会接受相同的参数。这样以来，使用一个集合来做 memoization 是一个非常好用的策略。</p>
+<p>我们可以用对待 state 同样的方式，在组合的函数中传递一个 memoization 缓存。</p>
+<pre><code>function memoize(fn) {
+  return function(arg, memoizationCache) {
+    if (memoizationCache.arg === arg) {
+      return memoizationCache.result;
+    }
+    const result = fn(arg);
+    memoizationCache.arg = arg;
+    memoizationCache.result = result;
+    return result;
+  };
+}
+
+function FancyBoxWithState(
+  children,
+  stateMap,
+  updateState,
+  memoizationCache
+) {
+  return FancyBox(
+    children.map(child =&gt; child.continuation(
+      stateMap.get(child.key),
+      updateState,
+      memoizationCache.get(child.key)
+    ))
+  );
+}
+
+const MemoizedFancyNameBox = memoize(FancyNameBox);
+</code></pre><h3 id="代数效应（Algebraic-Effects）"><a href="#代数效应（Algebraic-Effects）" class="headerlink" title="代数效应（Algebraic Effects）"></a>代数效应（Algebraic Effects）</h3><p>多层抽象需要共享琐碎数据时，一层层传递数据非常麻烦。如果能有一种方式可以在多层抽象中快捷地传递数据，同时又不需要牵涉到中间层级，那该有多好。React 中我们把它叫做“context”。</p>
+<p>有时候数据依赖并不是严格按照抽象树自上而下进行。举个例子，在布局算法中，你需要在实现他们的位置之前了解子节点的大小。</p>
+<p>现在，这个例子有一点超纲。我会使用 代数效应 这个由我发起的 ECMAScript 新特性提议。如果你对函数式编程很熟悉，它们 在避免由 monad 强制引入的仪式一样的编码。</p>
+<pre><code>function ThemeBorderColorRequest() { }
+
+function FancyBox(children) {
+  const color = raise new ThemeBorderColorRequest();
+  return {
+    borderWidth: &#39;1px&#39;,
+    borderColor: color,
+    children: children
+  };
+}
+
+function BlueTheme(children) {
+  return try {
+    children();
+  } catch effect ThemeBorderColorRequest -&gt; [, continuation] {
+    continuation(&#39;blue&#39;);
+  }
+}
+
+function App(data) {
+  return BlueTheme(
+    FancyUserList.bind(null, data.users)
+  );
+}
 </code></pre>]]></content>
     
     <summary type="html">
     
-      &lt;blockquote&gt;&lt;p&gt;5条原型规则是学习原型链的基础&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;h6 id=&quot;一、所有的引用类型（对象、数组、函数），都具有对象特性，即可自由扩展属性（除了“null”以外）&quot;&gt;&lt;a href=&quot;#一、所有的引用类型（对象、数组、函数），都具有
+      &lt;blockquote&gt;&lt;p&gt;译者序：本文是 React 核心开发者、有 React API 终结者之称的 Sebastian Markbage 撰写，阐述了他设计 React 的初衷。阅读此文，你能站在更高的高度思考 React 的过去、现在和未来。原文地址：&lt;a href=&quot;
     
     </summary>
     
-      <category term="Web前端" scheme="http://bjszdkj.cn/categories/Web%E5%89%8D%E7%AB%AF/"/>
-    
     
       <category term="Javascript" scheme="http://bjszdkj.cn/tags/Javascript/"/>
-    
-      <category term="原型" scheme="http://bjszdkj.cn/tags/%E5%8E%9F%E5%9E%8B/"/>
-    
-      <category term="原型链" scheme="http://bjszdkj.cn/tags/%E5%8E%9F%E5%9E%8B%E9%93%BE/"/>
     
   </entry>
   
   <entry>
     <title>5分钟入门vue.js</title>
-    <link href="http://bjszdkj.cn/2017/07/28/vue/"/>
-    <id>http://bjszdkj.cn/2017/07/28/vue/</id>
-    <published>2017-07-28T11:08:38.033Z</published>
-    <updated>2017-07-15T02:16:38.255Z</updated>
+    <link href="http://bjszdkj.cn/2017/08/06/vue/"/>
+    <id>http://bjszdkj.cn/2017/08/06/vue/</id>
+    <published>2017-08-06T14:46:03.824Z</published>
+    <updated>2017-08-06T14:46:03.831Z</updated>
     
     <content type="html"><![CDATA[<blockquote><p>Vue.js一个轻量级前端MVVM框架，核心思想是数据驱动+组件化，目前包括BAT在内的很多公司、项目组，都在向Vue.js 靠拢，除去 Vuejs 本身轻量、高效等特点，Vue.js 还具有上手快，简单易学的特点。</p>
 </blockquote>
-<h2 id="一、概览"><a href="#一、概览" class="headerlink" title="一、概览"></a>一、概览</h2><p>（1）vue.js 特点如图 1</p>
+<p>##概览 ##</p>
+<p>（1）vue.js 特点如图 1</p>
 <figure class="image-bubble">
                 <div class="img-lightbox">
                     <div class="overlay"></div>
@@ -95,7 +275,7 @@ f.alertName();
                 </div>
                 <div class="image-caption">图 2 vue.js 主要功能</div>
             </figure>
-<h2 id="二、MVVM-框架"><a href="#二、MVVM-框架" class="headerlink" title="二、MVVM 框架"></a>二、MVVM 框架</h2><p>前端交互越来越多，功能越来越复杂，架构从传统后台 MVC 向 REST API+前端 MV*迁移（MV*包括 MVC、MVP、MVVM)，其中 MVVM 架构图如图 3</p>
+<h2 id="MVVM-框架"><a href="#MVVM-框架" class="headerlink" title="MVVM 框架"></a>MVVM 框架</h2><p>前端交互越来越多，功能越来越复杂，架构从传统后台 MVC 向 REST API+前端 MV*迁移（MV*包括 MVC、MVP、MVVM)，其中 MVVM 架构图如图 3</p>
 <figure class="image-bubble">
                 <div class="img-lightbox">
                     <div class="overlay"></div>
@@ -103,13 +283,13 @@ f.alertName();
                 </div>
                 <div class="image-caption">图 3 MVVM 框架原理图</div>
             </figure>
-<h3 id="2-1-MVVM-特点"><a href="#2-1-MVVM-特点" class="headerlink" title="2.1 MVVM 特点"></a>2.1 MVVM 特点</h3><ul>
+<h3 id="MVVM-特点"><a href="#MVVM-特点" class="headerlink" title="MVVM 特点"></a>MVVM 特点</h3><ul>
 <li>针对具有复杂交互逻辑的前端应用</li>
 <li>提供基础的架构抽象</li>
 <li>通过 ajax 数据持久化，保证前端用户体验</li>
 </ul>
-<h3 id="2-2-原理"><a href="#2-2-原理" class="headerlink" title="2.2 原理"></a>2.2 原理</h3><p>视图和数据不能直接通讯，当 View 或 Model发生改变时，ViewModel会监听到对应的变化，通知到View或 Model 完成相应的更新，实现了数据的双向绑定</p>
-<h2 id="三、vue-js-对比-angular、-react"><a href="#三、vue-js-对比-angular、-react" class="headerlink" title="三、vue.js 对比 angular、 react"></a>三、vue.js 对比 angular、 react</h2><p>（1）文件大小</p>
+<h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><p>视图和数据不能直接通讯，当 View 或 Model发生改变时，ViewModel会监听到对应的变化，通知到View或 Model 完成相应的更新，实现了数据的双向绑定</p>
+<h2 id="vue-js-对比-angular、-react"><a href="#vue-js-对比-angular、-react" class="headerlink" title="vue.js 对比 angular、 react"></a>vue.js 对比 angular、 react</h2><p>（1）文件大小</p>
 <ul>
 <li>vue.js 更轻量，gzip 后(vue 1.0)大小只有 20k+</li>
 <li>Angular (1.4) 56K</li>
@@ -128,16 +308,16 @@ f.alertName();
 <li>vue.js 组件化思想和 react 组件化思想一致，把一个页面抽成组件树，组件会有完整的生命周期。</li>
 </ul>
 <p>除此之外，vue 还有自己独有的特点，比如计算属性</p>
-<h2 id="四、vue-js-核心思想"><a href="#四、vue-js-核心思想" class="headerlink" title="四、vue.js 核心思想"></a>四、vue.js 核心思想</h2><p>概述：vue.js 核心思想包括数据驱动和组件化</p>
-<h3 id="4-1-数据驱动"><a href="#4-1-数据驱动" class="headerlink" title="4.1  数据驱动"></a>4.1  数据驱动</h3><figure class="image-bubble">
+<h2 id="vue-js-核心思想"><a href="#vue-js-核心思想" class="headerlink" title="vue.js 核心思想"></a>vue.js 核心思想</h2><p>概述：vue.js 核心思想包括数据驱动和组件化</p>
+<h3 id="数据驱动"><a href="#数据驱动" class="headerlink" title="数据驱动"></a>数据驱动</h3><figure class="image-bubble">
                 <div class="img-lightbox">
                     <div class="overlay"></div>
                     <img src="/images/vue/4.png" alt="图 4 MVVM 框架示意图" title="">
                 </div>
                 <div class="image-caption">图 4 MVVM 框架示意图</div>
             </figure>
-<h4 id="4-1-1-数据驱动原理"><a href="#4-1-1-数据驱动原理" class="headerlink" title="4.1.1  数据驱动原理"></a>4.1.1  数据驱动原理</h4><p>如图4，没有 MVVM 框架之前，数据通过 ajax 从后端获取数据，为了让视图改变，需要手动触发 DOM的改变，再比如，通过前端交互改变一些数据，为了让视图发生变化，仍然需要手动触发 DOM 改变，而手动改变 DOM不仅是一个繁琐的过程，还非常容易出错。有了 vue.js 之后，就省去了手动操作 DOM 的步骤。在vue.js 中，只需改变数据，vue.js 通过 diretives 指令对 DOM 进行了一些封装，当数据发生变化，会通知指令去修改对应的DOM，数据驱动指令变化，DOM 是数据的一种自然映射。vue.js 还会对操作进行监听，当我们修改视图的时候，vue.js监听到这些变化，从而改变数据，这样就形成了数据的双向绑定。</p>
-<h4 id="4-1-2-数据响应原理"><a href="#4-1-2-数据响应原理" class="headerlink" title="4.1.2  数据响应原理"></a>4.1.2  数据响应原理</h4><figure class="image-bubble">
+<h4 id="数据驱动原理"><a href="#数据驱动原理" class="headerlink" title="数据驱动原理"></a>数据驱动原理</h4><p>如图4，没有 MVVM 框架之前，数据通过 ajax 从后端获取数据，为了让视图改变，需要手动触发 DOM的改变，再比如，通过前端交互改变一些数据，为了让视图发生变化，仍然需要手动触发 DOM 改变，而手动改变 DOM不仅是一个繁琐的过程，还非常容易出错。有了 vue.js 之后，就省去了手动操作 DOM 的步骤。在vue.js 中，只需改变数据，vue.js 通过 diretives 指令对 DOM 进行了一些封装，当数据发生变化，会通知指令去修改对应的DOM，数据驱动指令变化，DOM 是数据的一种自然映射。vue.js 还会对操作进行监听，当我们修改视图的时候，vue.js监听到这些变化，从而改变数据，这样就形成了数据的双向绑定。</p>
+<h4 id="数据响应原理"><a href="#数据响应原理" class="headerlink" title="数据响应原理"></a>数据响应原理</h4><figure class="image-bubble">
                 <div class="img-lightbox">
                     <div class="overlay"></div>
                     <img src="/images/vue/5.png" alt="图 5 vue 数据相应原理" title="">
@@ -145,7 +325,7 @@ f.alertName();
                 <div class="image-caption">图 5 vue 数据相应原理</div>
             </figure>
 <p>数据改变驱动视图自动更新，如图5 ，数据 a.b 在 vue 对象实例化的过程中，会给 a.b 这份数据通过 ES5 的 defineproperty 属性添加 getter 和 setter，同时 vue.js 会对模板进行编译，解析生成一个指令对象，这里就是一个 v-text，每个指令对象都会关联一个 watcher,当我们对指令对应的表达式 a.b 做求值的时候，就会触发它的 getter，这里把依赖会收集到 watcher，当再次改变 a.b 值时，就会触发它的 setter，会通知到对应watcher ，watcher 就会再次对 a.b 求值，当发现值改变了，watcher就会通知到指令，调用指令的 update方法，由于指令是对 DOM的封装，所以它会调用原生的 DOM 方法去更新视图，这样就完成了数据改变到视图更新的一个过程。</p>
-<h3 id="4-2-组件化"><a href="#4-2-组件化" class="headerlink" title="4.2  组件化"></a>4.2  组件化</h3><figure class="image-bubble">
+<h3 id="组件化"><a href="#组件化" class="headerlink" title="组件化"></a>组件化</h3><figure class="image-bubble">
                 <div class="img-lightbox">
                     <div class="overlay"></div>
                     <img src="/images/vue/6.png" alt="图 6 vue 组件化" title="">
@@ -166,8 +346,6 @@ f.alertName();
 &lt;/blockquote
     
     </summary>
-    
-      <category term="Web前端" scheme="http://bjszdkj.cn/categories/Web%E5%89%8D%E7%AB%AF/"/>
     
     
       <category term="Javascript" scheme="http://bjszdkj.cn/tags/Javascript/"/>
