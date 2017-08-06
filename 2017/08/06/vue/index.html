@@ -20,23 +20,23 @@
     
     
     <meta name="keywords" content="Javascript">
-    <meta name="description" content="Vue.js一个轻量级前端MVVM框架，核心思想是数据驱动+组件化，目前包括BAT在内的很多公司、项目组，都在向Vue.js 靠拢，除去 Vuejs 本身轻量、高效等特点，Vue.js 还具有上手快，简单易学的特点。  ##概览 ## （1）vue.js 特点如图 1">
+    <meta name="description" content="Vue.js一个轻量级前端MVVM框架，核心思想是数据驱动+组件化，目前包括BAT在内的很多公司、项目组，都在向Vue.js 靠拢，除去 Vuejs 本身轻量、高效等特点，Vue.js 还具有上手快，简单易学的特点。  概览（1）vue.js 特点如图 1">
 <meta name="keywords" content="Javascript">
 <meta property="og:type" content="article">
 <meta property="og:title" content="5分钟入门vue.js">
 <meta property="og:url" content="http://bjszdkj.cn/2017/08/06/vue/index.html">
 <meta property="og:site_name" content="韩鑫">
-<meta property="og:description" content="Vue.js一个轻量级前端MVVM框架，核心思想是数据驱动+组件化，目前包括BAT在内的很多公司、项目组，都在向Vue.js 靠拢，除去 Vuejs 本身轻量、高效等特点，Vue.js 还具有上手快，简单易学的特点。  ##概览 ## （1）vue.js 特点如图 1">
+<meta property="og:description" content="Vue.js一个轻量级前端MVVM框架，核心思想是数据驱动+组件化，目前包括BAT在内的很多公司、项目组，都在向Vue.js 靠拢，除去 Vuejs 本身轻量、高效等特点，Vue.js 还具有上手快，简单易学的特点。  概览（1）vue.js 特点如图 1">
 <meta property="og:image" content="http://bjszdkj.cn/images/vue/1.png">
 <meta property="og:image" content="http://bjszdkj.cn/images/vue/2.png">
 <meta property="og:image" content="http://bjszdkj.cn/images/vue/3.png">
 <meta property="og:image" content="http://bjszdkj.cn/images/vue/4.png">
 <meta property="og:image" content="http://bjszdkj.cn/images/vue/5.png">
 <meta property="og:image" content="http://bjszdkj.cn/images/vue/6.png">
-<meta property="og:updated_time" content="2017-08-06T14:46:03.831Z">
+<meta property="og:updated_time" content="2017-08-06T15:15:03.377Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="5分钟入门vue.js">
-<meta name="twitter:description" content="Vue.js一个轻量级前端MVVM框架，核心思想是数据驱动+组件化，目前包括BAT在内的很多公司、项目组，都在向Vue.js 靠拢，除去 Vuejs 本身轻量、高效等特点，Vue.js 还具有上手快，简单易学的特点。  ##概览 ## （1）vue.js 特点如图 1">
+<meta name="twitter:description" content="Vue.js一个轻量级前端MVVM框架，核心思想是数据驱动+组件化，目前包括BAT在内的很多公司、项目组，都在向Vue.js 靠拢，除去 Vuejs 本身轻量、高效等特点，Vue.js 还具有上手快，简单易学的特点。  概览（1）vue.js 特点如图 1">
 <meta name="twitter:image" content="http://bjszdkj.cn/images/vue/1.png">
     
         <link rel="alternate" type="application/atom+xml" title="韩鑫" href="/atom.xml">
@@ -125,7 +125,7 @@
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
                 <i class="icon icon-lg icon-chevron-left"></i>
             </a>
-            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="Search">
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
                 <i class="icon icon-lg icon-search"></i>
             </a>
@@ -144,7 +144,7 @@
         <h1 class="title">5分钟入门vue.js</h1>
         <h5 class="subtitle">
             
-                <time datetime="2017-08-06T14:46:03.824Z" itemprop="datePublished" class="page-time">
+                <time datetime="2017-08-06T15:15:03.376Z" itemprop="datePublished" class="page-time">
   2017-08-06
 </time>
 
@@ -164,7 +164,7 @@
     <aside class="post-widget">
         <nav class="post-toc-wrap" id="post-toc">
             <h4>TOC</h4>
-            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#MVVM-框架"><span class="post-toc-number">1.</span> <span class="post-toc-text">MVVM 框架</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#MVVM-特点"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">MVVM 特点</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#原理"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">原理</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#vue-js-对比-angular、-react"><span class="post-toc-number">2.</span> <span class="post-toc-text">vue.js 对比 angular、 react</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#vue-js-核心思想"><span class="post-toc-number">3.</span> <span class="post-toc-text">vue.js 核心思想</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#数据驱动"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">数据驱动</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#数据驱动原理"><span class="post-toc-number">3.1.1.</span> <span class="post-toc-text">数据驱动原理</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#数据响应原理"><span class="post-toc-number">3.1.2.</span> <span class="post-toc-text">数据响应原理</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#组件化"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">组件化</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#特点"><span class="post-toc-number">3.2.1.</span> <span class="post-toc-text">特点</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#组件设计原则"><span class="post-toc-number">3.2.2.</span> <span class="post-toc-text">组件设计原则</span></a></li></ol></li></ol></li></ol>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#概览"><span class="post-toc-number">1.</span> <span class="post-toc-text">概览</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#MVVM-框架"><span class="post-toc-number">2.</span> <span class="post-toc-text">MVVM 框架</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#MVVM-特点"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">MVVM 特点</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#原理"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">原理</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#vue-js-对比-angular、-react"><span class="post-toc-number">3.</span> <span class="post-toc-text">vue.js 对比 angular、 react</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#vue-js-核心思想"><span class="post-toc-number">4.</span> <span class="post-toc-text">vue.js 核心思想</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#数据驱动"><span class="post-toc-number">4.1.</span> <span class="post-toc-text">数据驱动</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#数据驱动原理"><span class="post-toc-number">4.1.1.</span> <span class="post-toc-text">数据驱动原理</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#数据响应原理"><span class="post-toc-number">4.1.2.</span> <span class="post-toc-text">数据响应原理</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#组件化"><span class="post-toc-number">4.2.</span> <span class="post-toc-text">组件化</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#特点"><span class="post-toc-number">4.2.1.</span> <span class="post-toc-text">特点</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#组件设计原则"><span class="post-toc-number">4.2.2.</span> <span class="post-toc-text">组件设计原则</span></a></li></ol></li></ol></li></ol>
         </nav>
     </aside>
     
@@ -174,7 +174,7 @@
     <div class="post-card">
         <h1 class="post-card-title">5分钟入门vue.js</h1>
         <div class="post-meta">
-            <time class="post-time" title="2017-08-06 22:46:03" datetime="2017-08-06T14:46:03.824Z"  itemprop="datePublished">2017-08-06</time>
+            <time class="post-time" title="2017-08-06 23:15:03" datetime="2017-08-06T15:15:03.376Z"  itemprop="datePublished">2017-08-06</time>
 
 
             <span class="icon-span"><i class="iconfont icon-view"></i><span id="busuanzi_value_page_pv"></span></span>
@@ -186,8 +186,7 @@
         <div class="post-content" id="post-content" itemprop="postContent">
             <blockquote><p>Vue.js一个轻量级前端MVVM框架，核心思想是数据驱动+组件化，目前包括BAT在内的很多公司、项目组，都在向Vue.js 靠拢，除去 Vuejs 本身轻量、高效等特点，Vue.js 还具有上手快，简单易学的特点。</p>
 </blockquote>
-<p>##概览 ##</p>
-<p>（1）vue.js 特点如图 1</p>
+<h2 id="概览"><a href="#概览" class="headerlink" title="概览"></a>概览</h2><p>（1）vue.js 特点如图 1</p>
 <figure class="image-bubble">
                 <div class="img-lightbox">
                     <div class="overlay"></div>
@@ -273,7 +272,7 @@
     <div class="content">
         
 <span class="post-time">
-    最后更新时间：<time datetime="2017-08-06T14:46:03.831Z" itemprop="dateUpdated">2017-08-06 22:46:03</time>
+    Last updated: <time datetime="2017-08-06T15:15:03.377Z" itemprop="dateUpdated">2017-08-06 23:15:03</time>
 </span><br>
 
 
@@ -351,16 +350,16 @@
     </div>
 
     
-<nav class="post-nav flex-row flex-justify-between">
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
   
-    <div class="waves-block waves-effect prev">
-      <a href="/2017/08/06/react设计思想/" id="post-prev" class="post-nav-link">
-        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2017/08/06/react设计思想/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
         <h4 class="title">react设计思想</h4>
       </a>
     </div>
-  
-
   
 </nav>
 
